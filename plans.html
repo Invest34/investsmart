@@ -64,13 +64,11 @@
     © <script>document.write(new Date().getFullYear())</script> InvestSmart. All rights reserved.
   </footer>
 
-  <!-- Script -->
   <script>
     const token = localStorage.getItem("token");
     const logoutBtn = document.getElementById("logoutBtn");
-    const binanceWallet = "0x296bc0E490B99a7bBc5b0728b8bf9c3cA560D71E"; // Set your wallet here
+    const binanceWallet = "0x296bc0E490B99a7bBc5b0728b8bf9c3cA560D71E"; // Your wallet
 
-    // Show logout button only if logged in
     if (token) {
       logoutBtn.addEventListener("click", () => {
         localStorage.removeItem("token");
@@ -81,7 +79,7 @@
       logoutBtn.style.display = "none";
     }
 
-    // Handle plan selection
+    // Handle plan selection and record pending deposit
     document.querySelectorAll(".investBtn").forEach(btn => {
       btn.addEventListener("click", () => {
         const planName = btn.dataset.plan;
@@ -93,16 +91,17 @@
           return;
         }
 
+        // Record pending deposit in localStorage
+        const pendingDeposits = JSON.parse(localStorage.getItem("pendingDeposits") || "[]");
+        pendingDeposits.push({ plan: planName, amount, status: "Pending", date: new Date().toLocaleString() });
+        localStorage.setItem("pendingDeposits", JSON.stringify(pendingDeposits));
+
         // Show deposit instructions
         alert(`To invest $${amount} in "${planName}", copy the Binance wallet below and complete your deposit:\n\n${binanceWallet}`);
+        navigator.clipboard.writeText(binanceWallet).catch(() => console.log("Failed to copy wallet"));
 
-        // Copy wallet automatically
-        navigator.clipboard.writeText(binanceWallet)
-          .then(() => console.log("Wallet copied to clipboard"))
-          .catch(() => console.log("Failed to copy wallet"));
-
-        // Redirect to dashboard where deposit section is
-        window.location.href = "index.html";
+        // Redirect to dashboard where pending deposits are shown
+        window.location.href = "dashboard.html";
       });
     });
   </script>
