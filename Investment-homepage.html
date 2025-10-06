@@ -6,32 +6,33 @@
   <title>InvestSmart - Homepage</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-b from-white to-slate-50 text-slate-800">
+<body class="bg-gradient-to-b from-white to-slate-50 text-slate-800 min-h-screen flex flex-col">
 
   <!-- Header -->
-  <header class="max-w-6xl mx-auto p-6 flex items-center justify-between">
+  <header class="max-w-6xl mx-auto p-6 flex flex-wrap justify-between items-center">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center text-white font-bold">IS</div>
       <div>
-        <h1 class="font-semibold text-lg">InvestSmart</h1>
+        <h1 class="font-semibold text-lg md:text-xl">InvestSmart</h1>
         <p class="text-xs text-slate-500">Invest smarter. Grow faster.</p>
       </div>
     </div>
-    <nav class="flex items-center gap-4">
-      <a href="#plans" class="px-4 py-2 border rounded-md">Plans</a>
-      <a href="#learn" class="px-4 py-2 border rounded-md">Learn</a>
-      <a href="login.html" class="px-4 py-2 border rounded-md">Login</a>
-      <a href="signup.html" class="px-4 py-2 bg-emerald-600 text-white rounded-md shadow">Sign Up</a>
+    <nav class="flex flex-wrap items-center gap-2 md:gap-4 mt-2 md:mt-0">
+      <a href="#plans" class="px-4 py-2 border rounded-md hover:bg-slate-100">Plans</a>
+      <a href="#learn" class="px-4 py-2 border rounded-md hover:bg-slate-100">Learn</a>
+      <a href="login.html" id="loginBtn" class="px-4 py-2 border rounded-md hover:bg-slate-100">Login</a>
+      <a href="signup.html" id="signupBtn" class="px-4 py-2 bg-emerald-600 text-white rounded-md shadow hover:bg-emerald-700">Sign Up</a>
+      <button id="logoutBtn" class="px-4 py-2 bg-yellow-400 text-green-900 rounded-md font-medium hover:bg-yellow-500 hidden">Logout</button>
     </nav>
   </header>
 
   <!-- Hero Section -->
   <section class="max-w-6xl mx-auto px-6 py-16 grid lg:grid-cols-2 gap-8 items-center">
     <div>
-      <h2 class="text-4xl font-extrabold leading-tight">Invest with clarity. Watch your money grow.</h2>
+      <h2 class="text-3xl md:text-4xl font-extrabold leading-tight">Invest with clarity. Watch your money grow.</h2>
       <p class="mt-4 text-slate-600">Custom plans, clear metrics, and a learning hub to make confident choices. Built for Kenya and global investors alike.</p>
 
-      <div class="mt-6 flex gap-3">
+      <div class="mt-6 flex flex-wrap gap-3">
         <a href="signup.html" class="px-5 py-3 bg-emerald-600 text-white rounded-lg font-medium">Get started</a>
         <a href="#plans" class="px-5 py-3 border rounded-lg">View plans</a>
       </div>
@@ -77,7 +78,7 @@
         <div class="text-sm text-slate-500">Estimated — not financial advice</div>
       </div>
 
-      <div class="mt-4 flex gap-2">
+      <div class="mt-4 flex flex-wrap gap-2">
         <a href="signup.html" class="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-md text-center">Invest now</a>
         <a href="#plans" class="flex-1 px-4 py-2 border rounded-md text-center">Save plan</a>
       </div>
@@ -94,19 +95,19 @@
         <h4 class="font-semibold">Growth Saver</h4>
         <p class="text-xs text-slate-500 mt-1">6 months • Min KES 1,000</p>
         <p class="mt-4 text-sm text-slate-600">Low risk plan with 8% return.</p>
-        <a href="signup.html" class="mt-4 inline-block px-4 py-2 bg-emerald-600 text-white rounded-md">Select</a>
+        <a href="signup.html" class="mt-4 inline-block px-4 py-2 bg-emerald-600 text-white rounded-md w-full text-center">Select</a>
       </article>
       <article class="bg-white p-6 rounded-xl shadow">
         <h4 class="font-semibold">Balanced Builder</h4>
         <p class="text-xs text-slate-500 mt-1">12 months • Min KES 5,000</p>
         <p class="mt-4 text-sm text-slate-600">Medium risk plan with 15% return.</p>
-        <a href="signup.html" class="mt-4 inline-block px-4 py-2 bg-emerald-600 text-white rounded-md">Select</a>
+        <a href="signup.html" class="mt-4 inline-block px-4 py-2 bg-emerald-600 text-white rounded-md w-full text-center">Select</a>
       </article>
       <article class="bg-white p-6 rounded-xl shadow">
         <h4 class="font-semibold">Aggressive Accelerator</h4>
         <p class="text-xs text-slate-500 mt-1">24 months • Min KES 20,000</p>
         <p class="mt-4 text-sm text-slate-600">High risk plan with 28% return.</p>
-        <a href="signup.html" class="mt-4 inline-block px-4 py-2 bg-emerald-600 text-white rounded-md">Select</a>
+        <a href="signup.html" class="mt-4 inline-block px-4 py-2 bg-emerald-600 text-white rounded-md w-full text-center">Select</a>
       </article>
     </div>
   </section>
@@ -133,9 +134,29 @@
   </section>
 
   <!-- Footer -->
-  <footer class="py-12 text-center text-slate-500 bg-slate-100">
+  <footer class="py-12 text-center text-slate-500 bg-slate-100 mt-auto">
     © <script>document.write(new Date().getFullYear())</script> InvestSmart — Demo site. All rights reserved.
   </footer>
+
+  <script>
+    // Show logout only if user is logged in
+    const token = localStorage.getItem("token");
+    const user_id = localStorage.getItem("user_id");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const loginBtn = document.getElementById("loginBtn");
+    const signupBtn = document.getElementById("signupBtn");
+
+    if (token && user_id) {
+      logoutBtn.classList.remove("hidden");
+      loginBtn.style.display = "none";
+      signupBtn.style.display = "none";
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user_id");
+        window.location.reload();
+      });
+    }
+  </script>
 
 </body>
 </html>
