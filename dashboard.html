@@ -9,50 +9,50 @@
 <body class="bg-gray-50 min-h-screen flex flex-col">
 
   <!-- Navbar -->
-  <nav class="flex justify-between items-center p-6 bg-green-700 text-white">
-    <h1 class="text-2xl font-bold">InvestSmart</h1>
-    <div class="space-x-4">
+  <nav class="flex flex-wrap justify-between items-center p-4 bg-green-700 text-white">
+    <h1 class="text-xl md:text-2xl font-bold">InvestSmart</h1>
+    <div class="space-x-3 text-sm md:text-base">
       <a href="investment-homepage.html" class="hover:underline">Home</a>
       <a href="plans.html" class="hover:underline">Plans</a>
       <a href="learn.html" class="hover:underline">Learn</a>
       <a href="about.html" class="hover:underline">About</a>
       <a href="contact.html" class="hover:underline">Contact</a>
-      <button id="logoutBtn" class="bg-yellow-400 text-green-900 px-4 py-2 rounded-lg font-medium hover:bg-yellow-500">
+      <button id="logoutBtn" class="bg-yellow-400 text-green-900 px-3 py-2 rounded-lg font-medium hover:bg-yellow-500">
         Logout
       </button>
     </div>
   </nav>
 
   <!-- Main Content -->
-  <main class="flex-1 p-8">
-    <h2 id="welcomeMsg" class="text-3xl font-bold text-green-700 mb-6">Welcome Back!</h2>
+  <main class="flex-1 p-4 md:p-8">
+    <h2 id="welcomeMsg" class="text-2xl md:text-3xl font-bold text-green-700 mb-6">Welcome Back!</h2>
 
     <!-- Stats Cards -->
-    <section class="grid md:grid-cols-3 gap-6 mb-10">
-      <div class="bg-white shadow rounded-xl p-6">
+    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+      <div class="bg-white shadow rounded-xl p-4">
         <h3 class="text-gray-500 mb-2">Account Balance</h3>
-        <p id="accountBalance" class="text-2xl font-bold text-green-700">$0</p>
+        <p id="accountBalance" class="text-xl font-bold text-green-700">$0</p>
       </div>
-      <div class="bg-white shadow rounded-xl p-6">
+      <div class="bg-white shadow rounded-xl p-4">
         <h3 class="text-gray-500 mb-2">Total Investments</h3>
-        <p id="totalInvestments" class="text-2xl font-bold text-green-700">$0</p>
+        <p id="totalInvestments" class="text-xl font-bold text-green-700">$0</p>
       </div>
-      <div class="bg-white shadow rounded-xl p-6">
+      <div class="bg-white shadow rounded-xl p-4">
         <h3 class="text-gray-500 mb-2">Earnings</h3>
-        <p id="earnings" class="text-2xl font-bold text-green-700">$0</p>
+        <p id="earnings" class="text-xl font-bold text-green-700">$0</p>
       </div>
     </section>
 
     <!-- Portfolio Table -->
-    <section class="bg-white shadow rounded-xl p-6 mb-10">
-      <h3 class="text-xl font-semibold mb-4">Your Portfolio</h3>
-      <table class="w-full text-left border-collapse">
+    <section class="bg-white shadow rounded-xl p-4 md:p-6 mb-10 overflow-x-auto">
+      <h3 class="text-lg md:text-xl font-semibold mb-4">Your Transactions</h3>
+      <table class="w-full text-left border-collapse text-sm md:text-base">
         <thead>
           <tr class="bg-gray-100 text-gray-600">
-            <th class="p-3">Investment</th>
+            <th class="p-3">Type</th>
             <th class="p-3">Amount</th>
             <th class="p-3">Status</th>
-            <th class="p-3">Returns</th>
+            <th class="p-3">Date</th>
           </tr>
         </thead>
         <tbody id="portfolioTable"></tbody>
@@ -60,21 +60,25 @@
     </section>
 
     <!-- Action Buttons -->
-    <section class="flex gap-4">
-      <button id="depositBtn" class="flex-1 bg-green-700 text-white py-3 rounded-lg shadow hover:bg-green-800">Deposit</button>
-      <button id="withdrawBtn" class="flex-1 bg-yellow-400 text-green-900 py-3 rounded-lg shadow hover:bg-yellow-500">Withdraw</button>
+    <section class="flex flex-col sm:flex-row gap-4">
+      <button id="depositBtn" class="flex-1 bg-green-700 text-white py-3 rounded-lg shadow hover:bg-green-800">
+        Deposit
+      </button>
+      <button id="withdrawBtn" class="flex-1 bg-yellow-400 text-green-900 py-3 rounded-lg shadow hover:bg-yellow-500">
+        Withdraw
+      </button>
     </section>
   </main>
 
   <!-- Footer -->
-  <footer class="bg-gray-100 text-center p-4 text-gray-500">
+  <footer class="bg-gray-100 text-center p-4 text-gray-500 text-sm">
     © <script>document.write(new Date().getFullYear())</script> InvestSmart. All rights reserved.
   </footer>
 
+  <!-- Scripts -->
   <script>
     /* ======== USER AUTH ======== */
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-
     if (!currentUser) {
       alert("Please log in first.");
       window.location.href = "login.html";
@@ -94,17 +98,24 @@
 
     /* ======== DEPOSIT ======== */
     document.getElementById("depositBtn").addEventListener("click", () => {
+      const walletAddress = "bnb1r4hf2s8vxxxxxx93j4d8s88rr"; // ← Replace with your Binance wallet
       let amount = prompt("Enter deposit amount in USD:");
       if (!amount) return;
 
       amount = parseFloat(amount);
       if (isNaN(amount) || amount <= 0) return alert("Enter a valid amount.");
 
+      const copyWallet = confirm(`Send exactly $${amount} to the Binance wallet below:\n\n${walletAddress}\n\nClick 'OK' to copy the address.`);
+      if (copyWallet) {
+        navigator.clipboard.writeText(walletAddress);
+        alert("Wallet address copied! Please complete your payment.");
+      }
+
       transactions.push({
         type: "Deposit",
         amount,
-        status: "Completed",
-        returns: Math.round(Math.random() * 20) + "%"
+        status: "Pending",
+        date: new Date().toLocaleString()
       });
 
       localStorage.setItem(userKey, JSON.stringify(transactions));
@@ -122,8 +133,8 @@
       transactions.push({
         type: "Withdrawal",
         amount,
-        status: "Completed",
-        returns: "-"
+        status: "Pending",
+        date: new Date().toLocaleString()
       });
 
       localStorage.setItem(userKey, JSON.stringify(transactions));
@@ -148,8 +159,8 @@
           <td class="p-3 ${isWithdrawal ? 'text-red-600' : 'text-green-600'}">
             ${isWithdrawal ? '-' : ''}$${tx.amount}
           </td>
-          <td class="p-3 text-green-700">${tx.status}</td>
-          <td class="p-3">${tx.returns}</td>
+          <td class="p-3 ${tx.status === 'Pending' ? 'text-yellow-600' : 'text-green-700'}">${tx.status}</td>
+          <td class="p-3">${tx.date}</td>
         `;
         table.appendChild(row);
 
@@ -162,7 +173,6 @@
       document.getElementById("earnings").textContent = `$${(totalInvestments * 0.15).toFixed(2)}`;
     }
 
-    // Load when page starts
     loadPortfolio();
   </script>
 
