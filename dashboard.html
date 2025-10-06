@@ -43,6 +43,18 @@
       </div>
     </section>
 
+    <!-- Binance Wallet -->
+    <section class="bg-white shadow rounded-xl p-4 md:p-6 mb-10">
+      <h3 class="text-lg md:text-xl font-semibold mb-2">Deposit Wallet</h3>
+      <div class="flex flex-col sm:flex-row items-center gap-3">
+        <input type="text" id="binanceWallet" value="bnb1r4hf2s8vxxxxxx93j4d8s88rr" readonly
+          class="flex-1 border p-2 rounded-lg text-sm md:text-base" />
+        <button onclick="copyWallet()" class="bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-800">
+          Copy Wallet
+        </button>
+      </div>
+    </section>
+
     <!-- Portfolio Table -->
     <section class="bg-white shadow rounded-xl p-4 md:p-6 mb-10 overflow-x-auto">
       <h3 class="text-lg md:text-xl font-semibold mb-4">Your Transactions</h3>
@@ -83,7 +95,6 @@
       alert("Please log in first.");
       window.location.href = "login.html";
     }
-
     document.getElementById("welcomeMsg").textContent = `Welcome, ${currentUser.fullName}! 👋`;
 
     /* ======== LOGOUT ======== */
@@ -92,24 +103,29 @@
       window.location.href = "login.html";
     });
 
+    /* ======== COPY WALLET ======== */
+    function copyWallet() {
+      const wallet = document.getElementById("binanceWallet");
+      navigator.clipboard.writeText(wallet.value)
+        .then(() => alert("Wallet address copied!"))
+        .catch(() => alert("Failed to copy wallet address"));
+    }
+
     /* ======== TRANSACTIONS ======== */
     const userKey = `transactions_${currentUser.email}`;
     let transactions = JSON.parse(localStorage.getItem(userKey)) || [];
 
     /* ======== DEPOSIT ======== */
     document.getElementById("depositBtn").addEventListener("click", () => {
-      const walletAddress = "bnb1r4hf2s8vxxxxxx93j4d8s88rr"; // ← Replace with your Binance wallet
       let amount = prompt("Enter deposit amount in USD:");
       if (!amount) return;
 
       amount = parseFloat(amount);
       if (isNaN(amount) || amount <= 0) return alert("Enter a valid amount.");
 
-      const copyWallet = confirm(`Send exactly $${amount} to the Binance wallet below:\n\n${walletAddress}\n\nClick 'OK' to copy the address.`);
-      if (copyWallet) {
-        navigator.clipboard.writeText(walletAddress);
-        alert("Wallet address copied! Please complete your payment.");
-      }
+      const walletAddress = document.getElementById("binanceWallet").value;
+      navigator.clipboard.writeText(walletAddress);
+      alert(`Wallet address copied! Send $${amount} to complete your deposit.`);
 
       transactions.push({
         type: "Deposit",
