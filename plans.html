@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Plans | InvestSmart</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -32,27 +32,27 @@
     <div class="grid md:grid-cols-3 gap-6">
       <div class="bg-white p-6 rounded-xl shadow plan">
         <h3 class="font-semibold">Growth Saver</h3>
-        <p class="text-sm text-gray-500 mt-1">6 months • Min $ 50 </p>
+        <p class="text-sm text-gray-500 mt-1">6 months • Min $50</p>
         <p class="mt-3 text-sm text-gray-600">Low risk plan with 8% return.</p>
-        <button class="mt-4 w-full md:w-auto inline-block px-4 py-2 bg-green-700 text-white rounded-md investBtn" data-plan="Growth Saver" data-min="1000">
+        <button class="mt-4 w-full md:w-auto px-4 py-2 bg-green-700 text-white rounded-md investBtn" data-plan="Growth Saver" data-min="50">
           Select
         </button>
       </div>
 
       <div class="bg-white p-6 rounded-xl shadow plan">
         <h3 class="font-semibold">Balanced Builder</h3>
-        <p class="text-sm text-gray-500 mt-1">12 months • Min $ 100 </p>
+        <p class="text-sm text-gray-500 mt-1">12 months • Min $100</p>
         <p class="mt-3 text-sm text-gray-600">Medium risk plan with 15% return.</p>
-        <button class="mt-4 w-full md:w-auto inline-block px-4 py-2 bg-green-700 text-white rounded-md investBtn" data-plan="Balanced Builder" data-min="5000">
+        <button class="mt-4 w-full md:w-auto px-4 py-2 bg-green-700 text-white rounded-md investBtn" data-plan="Balanced Builder" data-min="100">
           Select
         </button>
       </div>
 
       <div class="bg-white p-6 rounded-xl shadow plan">
         <h3 class="font-semibold">Aggressive Accelerator</h3>
-        <p class="text-sm text-gray-500 mt-1">24 months • Min $ 500 </p>
+        <p class="text-sm text-gray-500 mt-1">24 months • Min $500</p>
         <p class="mt-3 text-sm text-gray-600">High risk plan with 28% return.</p>
-        <button class="mt-4 w-full md:w-auto inline-block px-4 py-2 bg-green-700 text-white rounded-md investBtn" data-plan="Aggressive Accelerator" data-min="20000">
+        <button class="mt-4 w-full md:w-auto px-4 py-2 bg-green-700 text-white rounded-md investBtn" data-plan="Aggressive Accelerator" data-min="500">
           Select
         </button>
       </div>
@@ -69,6 +69,7 @@
     const token = localStorage.getItem("token");
     const user_id = localStorage.getItem("user_id");
     const logoutBtn = document.getElementById("logoutBtn");
+    const binanceWallet = "bnb1r4hf2s8vxxxxxx93j4d8s88rr"; // Set your wallet here
 
     // Show logout button only if logged in
     if (token && user_id) {
@@ -81,46 +82,36 @@
       logoutBtn.style.display = "none";
     }
 
-    // Handle plan investment
+    // Handle plan selection
     document.querySelectorAll(".investBtn").forEach(btn => {
-      btn.addEventListener("click", async () => {
-        const planName = btn.dataset.plan;
-        const minAmount = parseFloat(btn.dataset.min);
-
-        const amount = parseFloat(prompt(`Enter amount to invest in ${planName} (min KES ${minAmount})`));
-        if (isNaN(amount) || amount < minAmount) {
-          alert(`Enter an amount greater than or equal to KES ${minAmount}`);
-          return;
-        }
-
+      btn.addEventListener("click", () => {
         if (!token || !user_id) {
           alert("You must log in to invest in a plan.");
           return;
         }
 
-        try {
-          const res = await fetch("http://localhost:5000/invest", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({ user_id, plan_id: planName, amount })
-          });
+        const planName = btn.dataset.plan;
+        const minAmount = parseFloat(btn.dataset.min);
+        const amount = parseFloat(prompt(`Enter amount to invest in ${planName} (minimum USD ${minAmount})`));
 
-          const data = await res.json();
-          if (res.ok) {
-            alert(data.message);
-          } else {
-            alert(data.error);
-          }
-        } catch (err) {
-          console.error(err);
-          alert("Error making investment");
+        if (isNaN(amount) || amount < minAmount) {
+          alert(`Please enter an amount equal to or greater than USD ${minAmount}.`);
+          return;
         }
+
+        // Show deposit instructions
+        alert(`To invest $${amount} in "${planName}", copy the Binance wallet below and complete your deposit:\n\n${binanceWallet}`);
+
+        // Copy wallet automatically
+        navigator.clipboard.writeText(binanceWallet)
+          .then(() => console.log("Wallet copied to clipboard"))
+          .catch(() => console.log("Failed to copy wallet"));
+
+        // Redirect to dashboard where deposit section is
+        window.location.href = "dashboard.html";
       });
     });
   </script>
-
 </body>
 </html>
+
