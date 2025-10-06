@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Plans | InvestSmart</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -65,12 +65,13 @@
     © <script>document.write(new Date().getFullYear())</script> InvestSmart. All rights reserved.
   </footer>
 
+  <!-- Script -->
   <script>
     const token = localStorage.getItem("token");
     const user_id = localStorage.getItem("user_id");
     const logoutBtn = document.getElementById("logoutBtn");
 
-    // Show logout only if user is logged in
+    // Show logout button only if logged in
     if (token && user_id) {
       logoutBtn.addEventListener("click", () => {
         localStorage.removeItem("token");
@@ -121,5 +122,6 @@
       });
     });
   </script>
+
 </body>
 </html>
