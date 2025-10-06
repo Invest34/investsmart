@@ -93,14 +93,13 @@
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
     if (currentUser) {
-      // Show dashboard features
       document.getElementById("welcomeMsg").textContent = `Welcome, ${currentUser.fullName}! 👋`;
       document.getElementById("statsSection").classList.remove("hidden");
       document.getElementById("walletSection").classList.remove("hidden");
       document.getElementById("portfolioSection").classList.remove("hidden");
       document.getElementById("actionsSection").classList.remove("hidden");
     } else {
-      document.getElementById("welcomeMsg").textContent = `Welcome! Please log in to access full dashboard features.`;
+      document.getElementById("welcomeMsg").textContent = `Welcome! Please log in to access dashboard features.`;
     }
 
     /* ======== LOGOUT ======== */
@@ -128,7 +127,10 @@
 
     /* ======== DEPOSIT ======== */
     document.getElementById("depositBtn")?.addEventListener("click", () => {
-      if (!currentUser) return alert("Please log in first to deposit.");
+      if (!currentUser) {
+        window.location.href = "login.html";
+        return;
+      }
 
       let amount = prompt("Enter deposit amount in USD:");
       if (!amount) return;
@@ -153,7 +155,10 @@
 
     /* ======== WITHDRAW ======== */
     document.getElementById("withdrawBtn")?.addEventListener("click", () => {
-      if (!currentUser) return alert("Please log in first to withdraw.");
+      if (!currentUser) {
+        window.location.href = "login.html";
+        return;
+      }
 
       let amount = prompt("Enter withdrawal amount in USD:");
       if (!amount) return;
