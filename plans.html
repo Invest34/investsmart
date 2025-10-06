@@ -67,12 +67,11 @@
   <!-- Script -->
   <script>
     const token = localStorage.getItem("token");
-    const user_id = localStorage.getItem("user_id");
     const logoutBtn = document.getElementById("logoutBtn");
     const binanceWallet = "0x296bc0E490B99a7bBc5b0728b8bf9c3cA560D71E"; // Set your wallet here
 
     // Show logout button only if logged in
-    if (token && user_id) {
+    if (token) {
       logoutBtn.addEventListener("click", () => {
         localStorage.removeItem("token");
         localStorage.removeItem("user_id");
@@ -85,11 +84,6 @@
     // Handle plan selection
     document.querySelectorAll(".investBtn").forEach(btn => {
       btn.addEventListener("click", () => {
-        if (!token || !user_id) {
-          alert("You must log in to invest in a plan.");
-          return;
-        }
-
         const planName = btn.dataset.plan;
         const minAmount = parseFloat(btn.dataset.min);
         const amount = parseFloat(prompt(`Enter amount to invest in ${planName} (minimum USD ${minAmount})`));
@@ -108,10 +102,9 @@
           .catch(() => console.log("Failed to copy wallet"));
 
         // Redirect to dashboard where deposit section is
-        window.location.href = "dashboard.html";
+        window.location.href = "index.html";
       });
     });
   </script>
 </body>
 </html>
-
